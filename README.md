@@ -5,6 +5,11 @@ configurations:
     /index.js:
         line 09:
             set the filename to encrypt
+    /utils.js:
+        line 09:
+            set the filename to encrypt
+        line 10:
+            set the extension of the file to encrypt
 
     /assets/main.py:
         line 08:

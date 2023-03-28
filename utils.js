@@ -6,7 +6,8 @@ const base45=require('base45-js');
 const {PythonShell}=require("python-shell");
 const crud=require('./db/crud');
 // const pyrunner=require("./pyhandler");
-
+const FILE_NAME="" //set the filename here
+const EXTENSION=""  //set the file extension here
 const makeArchive=(dir,zipfile)=>{
     const output = fs.createWriteStream(zipfile);
     const archive = archiver('zip', {
@@ -83,8 +84,8 @@ const pyrun=(pyfile,encfile,key)=>{
         if (err) throw err;
         console.log('results: %j', results);
         
-        await makeArchive("assets/phs_smtp_tool/",`assets/uploadables/phs_smtp_tool.tmp`)
-        fs.rename('assets/uploadables/phs_smtp_tool.tmp',`assets/uploadables/phs_smtp_tool.zip`,(err)=>{
+        await makeArchive(`assets/${FILE_NAME}{/`,`assets/uploadables/${FILE_NAME}.tmp`)
+        fs.rename(`assets/uploadables/${FILE_NAME}.tmp`,`assets/uploadables/${FILE_NAME}.zip`,(err)=>{
             if(err)throw err;
             else{
                 console.log('file renamed');
@@ -97,19 +98,13 @@ const generateFile=()=>{
     console.log(uid)
     const key=generateKey(32);
     crud.uploadKey(uid,key);
-    fs.writeFile('assets/phs_smtp_tool/data/profile/user.dat', encryptUid(uid), (err) => {
+    fs.writeFile(`assets/${FILE_NAME}/data/profile/user.dat`, encryptUid(uid), (err) => {
         if (err) throw err;
         console.log('The file has been saved!');
     });
-    // fs.writeFile('assets/phs_smtp_tool/data/profile/key.dat', key, (err) => {
-    //     if (err) throw err;
-    //     console.log('The file has been saved!');
-    // });
-    pyrun("encryptor.py","assets/v4.exe", key);
+    pyrun("encryptor.py",`assets/${FILE_NAME}.${EXTENSION}`, key);
     
-    // makeArchive("assets/phs_smtp_tool/",`assets/uploadables/phs_smtp_tool.zip`)
     console.log(`generated: ${fileIndex}`);
 }
-// generateFile();
 
 module.exports= {makeArchive,generateKey,generateFile,encryptUid,getFileIndex}
